@@ -744,10 +744,10 @@ html, body {
 }
 
 function login(){
-  var u = document.getElementById("usuario").value;
-  var s = document.getElementById("senha").value;
 
-  // MOSTRA LOADING
+  const u = document.getElementById("usuario").value;
+  const s = document.getElementById("senha").value;
+
   document.getElementById("loading").style.display = "flex";
 
   if(document.getElementById("lembrar").checked){
@@ -755,11 +755,6 @@ function login(){
   } else {
     localStorage.removeItem("usuarioTracaoFort");
   }
-
-  function login() {
-
-  const u = document.getElementById("usuario").value;
-  const s = document.getElementById("senha").value;
 
   fetch("https://script.google.com/macros/s/AKfycbyicOOwq0WtOtJd8rTH3dozSjyNeJca90kw95v_mSA33M37sH-LCyH00tm0UIn4KQ/exec", {
     method: "POST",
@@ -775,14 +770,22 @@ function login(){
   .then(res => res.json())
   .then(res => {
 
+    document.getElementById("loading").style.display = "none";
+
     if (res.status === "ok") {
-      entrarSistema(res.usuario, res.nivel);
+
+      document.getElementById("nomeUsuario").innerHTML = res.usuario;
+      document.getElementById("nivelUsuario").innerHTML = "Nível: " + res.nivel;
+
+      entrarSistema();
+
     } else {
       mostrarErro();
     }
 
   })
   .catch(() => {
+    document.getElementById("loading").style.display = "none";
     mostrarErro();
   });
 
@@ -1214,3 +1217,4 @@ window.onresize = function(){
 </html>
 
  
+

@@ -756,20 +756,36 @@ function login(){
     localStorage.removeItem("usuarioTracaoFort");
   }
 
-  google.script.run.withSuccessHandler(function(res){
-    // ESCONDE LOADING
-    document.getElementById("loading").style.display = "none";
+  function login() {
 
-    if(res.status=="ok"){
-      entrarSistema();
-      document.getElementById("nomeUsuario").innerHTML = u;
-      document.getElementById("nivelUsuario").innerHTML = "Nível: " + res.nivel;
-      document.getElementById("erro").innerHTML = "";
+  const u = document.getElementById("usuario").value;
+  const s = document.getElementById("senha").value;
+
+  fetch("https://script.google.com/macros/s/AKfycbyicOOwq0WtOtJd8rTH3dozSjyNeJca90kw95v_mSA33M37sH-LCyH00tm0UIn4KQ/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      acao: "login",
+      usuario: u,
+      senha: s
+    })
+  })
+  .then(res => res.json())
+  .then(res => {
+
+    if (res.status === "ok") {
+      entrarSistema(res.usuario, res.nivel);
     } else {
-  mostrarErro();
-}
+      mostrarErro();
+    }
 
-  }).validarLogin(u, s);
+  })
+  .catch(() => {
+    mostrarErro();
+  });
+
 }
 
 /* CARREGA USUÁRIO SALVO */
@@ -1196,4 +1212,5 @@ window.onresize = function(){
 </script>
 </body>
 </html>
+
  

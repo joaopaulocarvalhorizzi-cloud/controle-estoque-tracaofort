@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+html, body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#0f172a;
+  height:100%;
+}
+
+#particles{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+  radial-gradient(circle at 20% 30%, rgba(30,58,138,.4), transparent 40%),
+  radial-gradient(circle at 80% 70%, rgba(6,95,70,.4), transparent 40%);
+  z-index:-2;
+}
+
+#login{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
+  box-sizing:border-box;
+  z-index:2;
+}
+
+.login-box{
+  width:340px;              /* antes 380 */
+  max-width:100%;
+
+  padding:35px 30px;        /* antes 50px 40px */
+  border-radius:20px;
+
+  background:rgba(15,23,42,0.65);
+  backdrop-filter:blur(35px);
+  -webkit-backdrop-filter:blur(35px);
+
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 40px 80px rgba(0,0,0,.7);
+
+  text-align:center;
+  color:white;
+}
+
+.login-box{
+  width:320px;
+  max-width:90vw;          /* nunca encosta na lateral */
+  max-height:85vh;         /* nunca passa da altura da tela */
+
+  padding:30px 25px;
+  border-radius:18px;
+
+  background:rgba(15,23,42,0.65);
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 35px 70px rgba(0,0,0,.7);
+
+  text-align:center;
+  color:white;
+}
+
+@keyframes fadeLogin{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+/* Campos */
+.login-box input{
+  width:100%;
+  padding:12px; 
+  margin-top:12px;
+  border-radius:8px;
+  border:1px solid #374151;
+  background:#111827;
+  color:white;
+  font-size:14px;
+  transition:0.2s;
+}
+
+.login-box input:focus{
+  border-color:#22c55e;
+  box-shadow:0 0 6px #22c55e;
+  outline:none;
+}
+
+/* Botão */
+.login-box button{
+  width:100%;
+  padding:12px;
+  margin-top:20px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  color:white;
+  font-weight:600;
+  font-size:15px;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:all .3s ease;
+}
+
+.login-box button:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 25px rgba(34,197,94,.4);
+}
+
+.campo{
+  display:flex;
+  align-items:center;
+  background:#111827;
+  border:1px solid #374151;
+  border-radius:8px;
+  padding:0 14px;
+  margin-top:12px;
+  height:52px; /* altura fixa profissional */
+  transition:all .3s ease;
+}
+
+.campo input{
+  border:none;
+  background:transparent;
+  flex:1;
+  color:white;
+  font-size:14px;
+  height:100%;
+}
+
+.campo input:focus{
+  outline:none;
+  box-shadow:none;
+}
+
+.campo:focus-within{
+  border-color:#22c55e;
+  box-shadow:0 0 10px rgba(34,197,94,.3);
+}
+
+.campo span{
+  width:22px;          /* largura fixa */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-right:12px;
+  font-size:16px;
+}
+
+/* SISTEMA */
+.container{
+  margin-left:200px;
+  margin-top:60px; /* igual à altura do topo */
+  padding:30px;
+}
+
+.sidebar button{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border:none;
+  background:#374151;
+  color:white;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.content{
+  flex:1;
+  padding:30px;
+}
+
+.card{
+  background:rgba(17,24,39,0.85);
+  backdrop-filter:blur(15px);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;
+  padding:25px;
+  box-shadow:0 20px 40px rgba(0,0,0,.5);
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+}
+button{
+  padding:10px;
+  margin-top:10px;
+}
+
+.tabela{
+  width:100%;
+  border-collapse:collapse;
+  color:#e5e7eb;
+  font-size:14px;
+}
+
+.tabela th{
+  padding:14px;
+  text-align:left;
+  font-weight:600;
+  background:rgba(255,255,255,0.05);
+  color:#f1f5f9;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.tabela td{
+  padding:14px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  color:#cbd5e1;
+}
+
+.tabela td:first-child{
+  color:#22c55e;
+  font-weight:600;
+}
+
+.tabela tr:hover{
+  background:rgba(34,197,94,0.08);
+}
+
+.filtro-estoque {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.filtro-estoque input[type="text"] {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 200px;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.filtro-estoque input[type="text"]:focus {
+  outline: none;
+  border-color: #22c55e;
+  box-shadow: 0 0 5px #22c55e;
+}
+
+.filtro-estoque button {
+  padding: 8px 12px;
+  background: #374151;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filtro-estoque button:hover {
+  background: #4b5563;
+}
+
+.filtro-menu {
+  display: none;
+  position: absolute;
+  top: 40px;  /* abaixo do botão */
+  right: 0;
+  background: #1f2937;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  min-width: 180px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.filtro-menu button {
+  width: 100%;
+  padding: 10px 15px;
+  background: none;
+  border: none;
+  text-align: left;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.filtro-menu button:hover {
+  background: #22c55e;
+}
+
+
+.logo{
+  width:180px;
+  margin-bottom:15px;
+  animation:logoFade 1.2s ease;
+}
+
+@keyframes logoFade{
+  from{opacity:0; transform:scale(.9)}
+  to{opacity:1; transform:scale(1)}
+}
+
+.subtitulo{
+  color:#9ca3af;
+  font-size:13px;
+  letter-spacing:2px;
+  margin-bottom:25px;
+}
+
+/* TOPO */
+.topo{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:60px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:0 30px;
+  box-sizing:border-box;
+
+  background:rgba(15,23,42,0.85);
+  backdrop-filter:blur(15px);
+
+  z-index:1000;
+}
+
+.usuario-info{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  font-size:22px;
+}
+
+.nivel{
+  font-size:12px;
+  opacity:0.7;
+}
+
+/* BOTÃO SAIR */
+.btn-sair{
+  background:#ef4444;
+  border:none;
+  color:white;
+  padding:8px 15px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btn-sair:hover{
+  background:#dc2626;
+  transform:scale(1.05);
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:60px; /* altura do topo */
+  left:0;
+  width:200px;
+  height:calc(100vh - 60px);
+}
+
+.sidebar button{
+  width:100%;
+  background:none;
+  border:none;
+  color:white;
+  padding:15px;
+  text-align:left;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.sidebar button:hover{
+  background:#374151;
+  padding-left:20px;
+}
+
+/* CONTEÚDO */
+.conteudo{
+  width:90%;
+  max-width:1200px;
+}
+
+/* ANIMAÇÃO */
+@keyframes fade{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.tabela-scroll{
+  max-height:500px;
+  overflow-y:auto;
+  border-radius:12px;
+}
+
+.tabela th{
+  position:sticky;
+  top:0;
+  background:#1f2937;
+  color:white;
+}
+
+.filtro-estoque{
+  width:100%;
+  max-width:1200px;
+  margin:0 auto 10px auto;   /* centraliza */
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  gap:15px;
+  color:white;
+  font-size:14px;
+}
+
+.filtro-estoque input[type=checkbox]{
+  transform:scale(1.2);
+  cursor:pointer;
+}
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  flex-direction: column;
+}
+
+.loading-screen .spinner {
+  border:6px solid rgba(255,255,255,0.2);
+  border-top:6px solid #22c55e;
+  border-radius:50%;
+  width:70px;
+  height:70px;
+  animation:spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+.lembrar-wrapper{
+  width:100%;
+  display:flex;
+  justify-content:flex-start; /* alinhado à esquerda */
+  margin:20px 0 5px 0;
+}
+
+.lembrar-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  color:#cbd5e1;
+  cursor:pointer;
+}
+
+.lembrar-label input{
+  width:16px;
+  height:16px;
+  margin:0;
+  accent-color:#22c55e;
+  cursor:pointer;
+}
+
+/* TRANSIÇÃO LOGIN */
+.login-hide{
+  animation:fadeOutLogin .6s ease forwards;
+}
+
+@keyframes fadeOutLogin{
+  from{
+    opacity:1;
+    transform:scale(1);
+  }
+  to{
+    opacity:0;
+    transform:scale(.95);
+  }
+}
+
+.sistema-show{
+  animation:fadeInSistema .7s ease forwards;
+}
+
+@keyframes fadeInSistema{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* MODAL ERRO PROFISSIONAL */
+
+.modal-erro{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(5px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s ease;
+  z-index:3000;
+}
+
+.modal-erro.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.modal-box{
+  background:#111827;
+  padding:35px 30px;
+  border-radius:16px;
+  width:320px;
+  text-align:center;
+  color:white;
+  box-shadow:0 25px 60px rgba(0,0,0,.6);
+  animation:modalIn .3s ease;
+}
+
+.modal-icon{
+  font-size:28px;
+  margin-bottom:10px;
+}
+
+.modal-titulo{
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.modal-texto{
+  font-size:14px;
+  color:#cbd5e1;
+  margin-bottom:20px;
+}
+
+.modal-box button{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#ef4444;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.modal-box button:hover{
+  background:#dc2626;
+}
+
+@keyframes modalIn{
+  from{transform:scale(.9); opacity:0;}
+  to{transform:scale(1); opacity:1;}
+}
+
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  z-index:-1;
+}
+
+.topo{
+  top:0 !important;
+}
+
+#sistema{
+  color:#e5e7eb;
+}
+
+#sistema h1,
+#sistema h2,
+#sistema h3,
+#sistema p,
+#sistema div{
+  color:#e5e7eb;
+}
+
+#sistema input{
+  background:#1f2937;
+  color:white;
+  border:1px solid #374151;
+}
+
+#sistema{
+  color:#e5e7eb;
+}
+
+html, body {
+  height:100vh;
+  overflow-x:hidden;
+}
+
+</style>
+</head>
+
+<script>
+
+</script>
+
+<body>
+<canvas id="particles"></canvas>
+
+<div id="modalErro" class="modal-erro">
+  <div class="modal-box">
+    <div class="modal-icon">⚠</div>
+    <div class="modal-titulo">Falha na autenticação</div>
+    <div class="modal-texto">Usuário ou senha incorretos.</div>
+    <button onclick="fecharModal()">OK</button>
+  </div>
+</div>
+
+ <!-- TELA DE CARREGAMENTO -->
+<div id="loading" class="loading-screen" style="display:none">
+  <div class="spinner"></div>
+  Carregando...
+</div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+
+    <img src="https://image2url.com/r2/default/images/1771505711949-abeed433-99e3-4561-be3c-e2f30802a4eb.png" class="logo">
+
+    <h2 style="margin-top:5px">TraçãoFort</h2>
+    <p class="subtitulo">Controle de Estoque • Itarana-ES</p>
+
+    <p style="font-size:11px;color:#6b7280;margin-top:-10px">
+      Sistema Interno v1.0
+    </p>
+
+    <div class="campo">
+      <span>👤</span>
+      <input id="usuario" placeholder="Usuário">
+    </div>
+
+    <div class="campo" style="position:relative;">
+      <span>🔒</span>
+      <input id="senha" type="password" placeholder="Senha">
+      <span onclick="toggleSenha()" 
+            style="position:absolute;right:10px;cursor:pointer;">
+        👁
+      </span>
+    </div>
+
+    <div class="lembrar-wrapper">
+  <label class="lembrar-label">
+    <input type="checkbox" id="lembrar">
+    <span>Lembrar usuário</span>
+  </label>
+</div>
+
+    <button onclick="login()">Entrar</button>
+
+  </div>
+</div>
+
+
+<!-- SISTEMA -->
+<div id="sistema" style="display:none">
+
+  <div class="topo">
+    <div class="usuario-info">
+      <span class="avatar">👤</span>
+      <div>
+        <div id="nomeUsuario"></div>
+        <div id="nivelUsuario" class="nivel"></div>
+      </div>
+    </div>
+
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+
+  <div class="container">
+
+    <div class="sidebar">
+      <button onclick="mostrarTela('estoque')">📦 Estoque</button>
+      <button onclick="mostrarTela('entrada')">📥 Entrada</button>
+      <button onclick="mostrarTela('saida')">📤 Saída</button>
+      <button onclick="mostrarTela('historico')">📜 Histórico</button>
+      <button onclick="mostrarTela('registrar')">➕ Registrar Produto</button>
+    </div>
+
+    <div class="conteudo" id="conteudo">
+      <h2>Bem-vindo ao Controle de Estoque da TraçãoFort</h2>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  function toggleSenha(){
+  var s = document.getElementById("senha");
+  s.type = s.type == "password" ? "text" : "password";
+}
+
+function login(){
+  var u = document.getElementById("usuario").value;
+  var s = document.getElementById("senha").value;
+
+  // MOSTRA LOADING
+  document.getElementById("loading").style.display = "flex";
+
+  if(document.getElementById("lembrar").checked){
+    localStorage.setItem("usuarioTracaoFort", u);
+  } else {
+    localStorage.removeItem("usuarioTracaoFort");
+  }
+
+  google.script.run.withSuccessHandler(function(res){
+    // ESCONDE LOADING
+    document.getElementById("loading").style.display = "none";
+
+    if(res.status=="ok"){
+      entrarSistema();
+      document.getElementById("nomeUsuario").innerHTML = u;
+      document.getElementById("nivelUsuario").innerHTML = "Nível: " + res.nivel;
+      document.getElementById("erro").innerHTML = "";
+    } else {
+  mostrarErro();
+}
+
+  }).validarLogin(u, s);
+}
+
+/* CARREGA USUÁRIO SALVO */
+window.onload = function(){
+  var salvo = localStorage.getItem("usuarioTracaoFort");
+  if(salvo){
+    document.getElementById("usuario").value = salvo;
+    document.getElementById("lembrar").checked = true;
+  }
+}
+
+function entrarSistema(){
+
+  const login = document.getElementById("login");
+  const sistema = document.getElementById("sistema");
+
+  login.classList.add("login-hide");
+
+  setTimeout(()=>{
+    login.style.display="none";
+    sistema.style.display="block";
+    sistema.classList.add("sistema-show");
+  },600);
+
+}
+
+function mostrarTela(tela){
+  var conteudo = document.getElementById("conteudo");
+  var loading = document.getElementById("loading");
+
+  // Mostra a tela de carregamento
+  loading.style.display = "flex";
+  conteudo.innerHTML = "";
+
+  // Função utilitária para esconder a tela de loading com delay mínimo de 250ms
+  function esconderLoading(startTime){
+    var elapsed = Date.now() - startTime;
+    var minDelay = 250; // mínimo 250ms
+    if(elapsed < minDelay){
+      setTimeout(()=>{ loading.style.display = "none"; }, minDelay - elapsed);
+    } else {
+      loading.style.display = "none";
+    }
+  }
+
+  var start = Date.now(); // marca o início
+
+  if(tela=="estoque"){
+    google.script.run
+      .withSuccessHandler(function(dados){
+        montarTabela(dados);
+        esconderLoading(start);
+      })
+      .withFailureHandler(function(e){
+        conteudo.innerHTML = "Erro ao carregar estoque";
+        console.log(e);
+        esconderLoading(start);
+      })
+      .listarEstoque();
+  }
+
+  else if(tela=="entrada"){
+    conteudo.innerHTML = `
+      <h3>📥 Entrada de Peça</h3>
+      Código:<input id="cod">
+      Quantidade:<input id="qtd" type="number">
+      <button id="btnEntrada">Registrar Entrada</button>
+      <p id="msg"></p>
+    `;
+    document.getElementById("btnEntrada").onclick = function(){
+      loading.style.display = "flex";
+      var btnStart = Date.now();
+      entrada();
+      // Garantir que carregue pelo menos 250ms
+      esconderLoading(btnStart);
+    };
+    esconderLoading(start);
+  }
+
+  else if(tela=="saida"){
+    conteudo.innerHTML = `
+      <h3>📤 Saída de Peça</h3>
+      Código:<input id="cod">
+      Quantidade:<input id="qtd" type="number">
+      <button id="btnSaida">Registrar Saída</button>
+      <p id="msg"></p>
+    `;
+    document.getElementById("btnSaida").onclick = function(){
+      loading.style.display = "flex";
+      var btnStart = Date.now();
+      saida();
+      esconderLoading(btnStart);
+    };
+    esconderLoading(start);
+  }
+
+  else if(tela=="registrar"){
+    conteudo.innerHTML = `
+      <h3>➕ Registrar Produto</h3>
+      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:15px;max-width:600px;margin:10px auto;">
+        <div>Código:<input id="novoCod"></div>
+        <div>Descrição:<input id="novoDesc"></div>
+        <div>Categoria:<input id="novoCat"></div>
+        <div>Quantidade:<input id="novoQtd" type="number"></div>
+        <div>Estoque Mínimo:<input id="novoMin" type="number"></div>
+        <div>Localização:<input id="novoLoc"></div>
+        <div style="grid-column: span 2; text-align:right;">
+          <button id="btnRegistrar">Registrar</button>
+        </div>
+        <div style="grid-column: span 2;"><p id="msgProduto"></p></div>
+      </div>
+    `;
+    document.getElementById("btnRegistrar").onclick = function(){
+      loading.style.display = "flex";
+      var btnStart = Date.now();
+      registrarProduto();
+      esconderLoading(btnStart);
+    };
+    esconderLoading(start);
+  }
+
+  else if(tela=="historico"){
+    conteudo.innerHTML = `
+      <h3>📜 Histórico de Movimentações</h3>
+      <div class='tabela-scroll'>
+        <table class='tabela' id='tabelaHistorico'>
+          <tr>
+            <th>Data</th>
+            <th>Tipo</th>
+            <th>Código</th>
+            <th>Quantidade</th>
+            <th>Usuário</th>
+          </tr>
+        </table>
+      </div>
+    `;
+    
+    google.script.run.withSuccessHandler(function(dados){
+      var tabela = document.getElementById("tabelaHistorico");
+
+      for(var i=0; i<dados.length; i++){
+        var row = tabela.insertRow(-1);
+        for(var j=0; j<dados[i].length; j++){
+          var cell = row.insertCell(j);
+          if(j==0){
+            cell.innerText = new Date(dados[i][j]).toLocaleString("pt-BR");
+          }else{
+            cell.innerText = dados[i][j];
+          }
+        }
+        // 🔹 Cores de entrada e saída
+        if(dados[i][1] == "Entrada") row.style.backgroundColor = "#d1fae5";
+        if(dados[i][1] == "Saída") row.style.backgroundColor = "#fee2e2";
+      }
+
+      esconderLoading(start);
+    }).listarHistorico();
+  }
+}
+
+
+function entrada(){
+
+  var campoCod = document.getElementById("cod");
+  var campoQtd = document.getElementById("qtd");
+
+  var cod = campoCod.value;
+  var qtd = Number(campoQtd.value);
+
+  google.script.run.withSuccessHandler(function(res){
+
+    document.getElementById("msg").innerHTML = res;
+
+    // 🔹 LIMPA OS CAMPOS
+    campoCod.value = "";
+    campoQtd.value = "";
+
+    // 🔹 VOLTA FOCO PARA O CÓDIGO
+    campoCod.focus();
+
+  }).registrarEntrada(cod, qtd);
+}
+
+function saida(){
+
+  var campoCod = document.getElementById("cod");
+  var campoQtd = document.getElementById("qtd");
+
+  var cod = campoCod.value;
+  var qtd = Number(campoQtd.value);
+
+  google.script.run.withSuccessHandler(function(res){
+
+    document.getElementById("msg").innerHTML = res;
+
+    // 🔹 LIMPA OS CAMPOS
+    campoCod.value = "";
+    campoQtd.value = "";
+
+    // 🔹 VOLTA FOCO PARA O CÓDIGO
+    campoCod.focus();
+
+  }).registrarSaida(cod, qtd);
+}
+
+function registrarProduto(){
+  var cod = document.getElementById("novoCod").value.trim();
+  var desc = document.getElementById("novoDesc").value.trim();
+  var cat = document.getElementById("novoCat").value.trim();
+  var qtd = Number(document.getElementById("novoQtd").value);
+  var min = Number(document.getElementById("novoMin").value);
+  var loc = document.getElementById("novoLoc").value.trim();
+
+  // 🔹 Validação rápida
+  if(!cod || !desc || !cat || !loc || isNaN(qtd) || isNaN(min)){
+    document.getElementById("msgProduto").innerHTML = "<span style='color:red'>Preencha todos os campos corretamente!</span>";
+    return;
+  }
+
+  google.script.run.withSuccessHandler(function(res){
+    document.getElementById("msgProduto").innerHTML = "<span style='color:green'>"+res+"</span>";
+
+    // 🔹 Limpa campos
+    document.getElementById("novoCod").value = "";
+    document.getElementById("novoDesc").value = "";
+    document.getElementById("novoCat").value = "";
+    document.getElementById("novoQtd").value = "";
+    document.getElementById("novoMin").value = "";
+    document.getElementById("novoLoc").value = "";
+    document.getElementById("novoCod").focus();
+
+    // 🔹 Atualiza tabela de estoque automaticamente
+    mostrarTela('estoque');
+
+  }).adicionarProduto(cod, desc, cat, qtd, min, loc);
+}
+
+function adicionarProduto(cod, desc, cat, qtd, min, loc){
+  var ss = SpreadsheetApp.getActive();
+  var aba = ss.getSheetByName("Estoque"); // nome da aba de produtos
+  aba.appendRow([cod, desc, cat, qtd, min, loc]);
+  return "Produto registrado ✔";
+}
+
+function montarTabela(dados){
+  if(!dados){
+    document.getElementById("conteudo").innerHTML="Erro ao carregar estoque";
+    return;
+  }
+
+  var html = `
+<h3>📦 Estoque Atual</h3>
+
+<div class="filtro-estoque">
+  <input type="text" id="busca" placeholder="Buscar código ou descrição" oninput="filtrarTabela()">
+  <button onclick="toggleFiltro()">☰ Filtro</button>
+  <div class="filtro-menu" id="menuFiltro">
+    <button onclick="ordenarEstoque('crescente')">Crescente</button>
+    <button onclick="ordenarEstoque('decrescente')">Decrescente</button>
+    <button onclick="ordenarEstoque('categoria')">Por Categoria</button>
+    <button onclick="ordenarEstoque('estoqueBaixo')">Estoque Baixo</button>
+  </div>
+</div>
+
+<div class="tabela-scroll">
+<table class="tabela" id="tabelaEstoque">
+`;
+
+// Monta linhas
+for(var i=0;i<dados.length;i++){
+  html += "<tr>";
+  for(var j=0;j<dados[i].length;j++){
+    if(i==0)
+      html += "<th>"+dados[i][j]+"</th>";
+    else{
+      if(j==3 && dados[i][3] <= dados[i][4])
+        html += "<td data-baixo='1'>"+dados[i][j]+"</td>";
+      else
+        html += "<td>"+dados[i][j]+"</td>";
+    }
+  }
+  html += "</tr>";
+}
+
+html += "</table></div>";
+document.getElementById("conteudo").innerHTML = html;
+filtrarTabela(); // aplica filtro inicial para estoque baixo
+}
+
+// Função de busca + destaque
+function filtrarTabela() {
+  var texto = document.getElementById("busca").value.toLowerCase();
+  var tabela = document.getElementById("tabelaEstoque");
+  if(!tabela) return;
+
+  for (var i = 1; i < tabela.rows.length; i++) {
+    var codigo = tabela.rows[i].cells[0].innerText.toLowerCase();
+    var desc = tabela.rows[i].cells[1].innerText.toLowerCase();
+    var qtd = Number(tabela.rows[i].cells[3].innerText);
+    var min = Number(tabela.rows[i].cells[4].innerText);
+
+    var mostrar = true;
+    if(texto && !(codigo.includes(texto) || desc.includes(texto))) mostrar = false;
+
+    tabela.rows[i].style.display = mostrar ? "" : "none";
+
+    // Destaque de estoque baixo
+    if(mostrar && qtd <= min) tabela.rows[i].style.backgroundColor = "#fee2e2";
+    else if(mostrar) tabela.rows[i].style.backgroundColor = "";
+  }
+}
+
+document.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    login();
+  }
+});
+
+function toggleFiltro(){
+  var menu = document.getElementById("menuFiltro");
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+window.onclick = function(event){
+  var menu = document.getElementById("menuFiltro");
+  var btn = document.querySelector(".filtro-estoque button");
+  if(!btn.contains(event.target) && !menu.contains(event.target)){
+    menu.style.display = "none";
+  }
+}
+
+function mostrarErro(){
+  document.getElementById("modalErro").classList.add("show");
+}
+
+function fecharModal(){
+  document.getElementById("modalErro").classList.remove("show");
+}
+
+// Ordenação da tabela
+function ordenarEstoque(tipo){
+  var tabela = document.getElementById("tabelaEstoque");
+  if(!tabela) return;
+  var rows = Array.from(tabela.rows).slice(1);
+
+  if(tipo === 'crescente') rows.sort((a,b)=>Number(a.cells[3].innerText)-Number(b.cells[3].innerText));
+  else if(tipo==='decrescente') rows.sort((a,b)=>Number(b.cells[3].innerText)-Number(a.cells[3].innerText));
+  else if(tipo==='categoria') rows.sort((a,b)=>a.cells[2].innerText.localeCompare(b.cells[2].innerText));
+  else if(tipo==='estoqueBaixo'){
+    rows.sort((a,b)=>{
+      var aBaixo = Number(a.cells[3].innerText) - Number(a.cells[4].innerText) <= 0 ? 0 : 1;
+      var bBaixo = Number(b.cells[3].innerText) - Number(b.cells[4].innerText) <= 0 ? 0 : 1;
+      return aBaixo - bBaixo;
+    });
+  }
+
+  // Reinsere linhas
+  for(var i=0;i<rows.length;i++) tabela.appendChild(rows[i]);
+
+  filtrarTabela(); // mantém busca ativa após ordenação
+}
+
+function sair(){
+  // Mostra a tela de login
+  document.getElementById("sistema").style.display = "none";
+  document.getElementById("login").style.display = "flex";
+
+  // Limpa senha
+  document.getElementById("senha").value = "";
+  
+  // Opcional: limpa mensagem de erro
+  document.getElementById("erro").innerHTML = "";
+
+  // Foca no usuário
+  document.getElementById("usuario").focus();
+}
+
+// PARTICULAS FUNDO
+var canvas = document.getElementById("particles");
+var ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+var particles = [];
+
+for(var i=0;i<60;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    radius:Math.random()*2+1,
+    dx:(Math.random()-.5)*0.5,
+    dy:(Math.random()-.5)*0.5
+  });
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle="rgba(34,197,94,0.4)";
+
+  particles.forEach(function(p){
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+    ctx.fill();
+
+    p.x+=p.dx;
+    p.y+=p.dy;
+
+    if(p.x<0||p.x>canvas.width) p.dx*=-1;
+    if(p.y<0||p.y>canvas.height) p.dy*=-1;
+  });
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+
+window.onresize = function(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+};
+
+</script>
+</body>
+</html>
+ 

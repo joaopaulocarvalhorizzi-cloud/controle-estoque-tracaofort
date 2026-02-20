@@ -759,14 +759,34 @@ function login(){
   fetch("https://script.google.com/macros/s/AKfycbyicOOwq0WtOtJd8rTH3dozSjyNeJca90kw95v_mSA33M37sH-LCyH00tm0UIn4KQ/exec", {
   method: "POST",
   headers: {
-    "Content-Type": "application/json"
+    "Content-Type": "application/x-www-form-urlencoded"
   },
-  body: JSON.stringify({
+  body: new URLSearchParams({
     acao: "login",
     usuario: u,
     senha: s
   })
 })
+.then(res => res.json())
+.then(res => {
+
+  document.getElementById("loading").style.display = "none";
+
+  if (res.status === "ok") {
+    document.getElementById("nomeUsuario").innerHTML = res.usuario;
+    document.getElementById("nivelUsuario").innerHTML = "Nível: " + res.nivel;
+    entrarSistema();
+  } else {
+    mostrarErro();
+  }
+
+})
+.catch(err => {
+  console.error(err);
+  document.getElementById("loading").style.display = "none";
+  mostrarErro();
+});
+  
   .then(res => res.json())
   .then(res => {
 
@@ -1213,6 +1233,7 @@ window.onresize = function(){
 </html>
 
  
+
 
 
 

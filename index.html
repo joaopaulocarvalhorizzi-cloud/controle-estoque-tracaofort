@@ -773,12 +773,9 @@ function login(){
     document.getElementById("loading").style.display = "none";
 
     if (res.status === "ok") {
-
       document.getElementById("nomeUsuario").innerHTML = res.usuario;
       document.getElementById("nivelUsuario").innerHTML = "Nível: " + res.nivel;
-
       entrarSistema();
-
     } else {
       mostrarErro();
     }
@@ -1210,11 +1207,12 @@ draw();
 window.onresize = function(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-};
+}
 
 </script>
 </body>
 </html>
 
  
+
 

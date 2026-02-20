@@ -757,16 +757,16 @@ function login(){
   }
 
   fetch("https://script.google.com/macros/s/AKfycbyicOOwq0WtOtJd8rTH3dozSjyNeJca90kw95v_mSA33M37sH-LCyH00tm0UIn4KQ/exec", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      acao: "login",
-      usuario: u,
-      senha: s
-    })
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    acao: "login",
+    usuario: u,
+    senha: s
   })
+})
   .then(res => res.json())
   .then(res => {
 
@@ -1213,6 +1213,7 @@ window.onresize = function(){
 </html>
 
  
+
 
 
 
